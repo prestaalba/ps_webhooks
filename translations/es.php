@@ -1,0 +1,30 @@
+<?php
+
+global $_MODULE;
+$_MODULE = array();
+$_MODULE['<{ps_webhooks}prestashop>ps_webhooks_eac9d5d10454804bb9a1da73cb33e00a'] = 'PrestaShop Webhooks';
+$_MODULE['<{ps_webhooks}prestashop>ps_webhooks_cbb4857266598dd60d2d929930b1430b'] = 'Dispara notificaciones en tiempo real sobre eventos de PrestaShop adjuntando a la solicitud datos de los objetos en formato JSON.';
+$_MODULE['<{ps_webhooks}prestashop>ps_webhooks_4093808c9781fb6ca2ed5ade71deff4d'] = 'Para poder utilizar este módulo, por favor, active cURL (extensión de PHP).';
+$_MODULE['<{ps_webhooks}prestashop>ps_webhooks_221d2a347ebfc15d48665188f639d1cb'] = 'Webhooks';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_d3b206d196cd6be3a2764c1fb90b200f'] = 'Eliminar seleccionados';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_e25f0ecd41211b01c83e5fec41df4fe7'] = 'Eliminar elementos seleccionados?';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_ede4759c9afae620fd586628789fa304'] = 'Habilitar selección';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_ab7fd6e250b64a46027a996088fdff74'] = 'Deshabilitar selección';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_004bf6c9a40003140292e97330236c53'] = 'Acción';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_0eceeb45861f9585dd7a97a3e36f85c6'] = 'Creado';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_ff0a3b7f3daef040faf89a88fdac01b7'] = 'Actualizado';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_5fe6005bf6e415c950c011fb65f12b8f'] = 'Eliminado';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_1a434befae3f49ae09347ded52032f6f'] = 'Entidad';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_e6b391a8d2c4d45902a23a8b6585703d'] = 'URL';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_b5a7adde1af5c87d7fd797b6245c2a39'] = 'Descripción';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Habilitado';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_150c7abfca6c489fee5cb82fbb7a9bc4'] = 'Webhook';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_a25ceee916586e7ee7f53f669e615bdc'] = 'URL Remota';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_ec53a8c4f07baed5d8825072c89799be'] = 'Estado';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_b9f5c797ebbf55adccdd8539a65a0241'] = 'Deshabilitado';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_ef61fb324d729c341ea8ab9901e23566'] = 'Añadir nuevo';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_0cbc6611f5540bd0809a388dc95a615b'] = 'Probar';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_240d37a3965d6e80728a0d74c844b520'] = 'Conexión al webhook verificada';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_803bede8777a81866b2f3dcec04d7c2c'] = 'No es posible conectarse a esta URL';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_ef1b393222d4201ac556ec467dc0b0e0'] = 'No es posible verificar la conexión a esta URL';
