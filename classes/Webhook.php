@@ -51,14 +51,14 @@ class Webhook extends ObjectModel
             return [];
         }
 
-        // Security: Use prepared query to prevent SQL injection
-        $sql = 'SELECT id_webhook
-            FROM ' . _DB_PREFIX_ . 'webhook
-            WHERE CONCAT(entity, action) = %s AND active = 1';
+        // Security: Use DbQuery object to prevent SQL injection
+        $query = new DbQuery();
+        $query->select('id_webhook');
+        $query->from('webhook');
+        $query->where('CONCAT(entity, action) = ' . pSQL(strtolower($hook)));
+        $query->where('active = 1');
 
-        $data = Db::getInstance()->executeS($sql, [
-            'hook' => pSQL(strtolower($hook))
-        ]);
+        $data = Db::getInstance()->executeS($query);
 
         return array_column($data, 'id_webhook');
     }
