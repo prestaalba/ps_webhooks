@@ -46,12 +46,6 @@ class Webhook extends ObjectModel
      */
     public static function getIdsByActionEntity($hook)
     {
-        // Security: Validate that $hook is a valid string
-        if (!is_string($hook) || empty($hook)) {
-            return [];
-        }
-
-        // Security: Use DbQuery object to prevent SQL injection
         $query = new DbQuery();
         $query->select('id_webhook');
         $query->from('webhook');
