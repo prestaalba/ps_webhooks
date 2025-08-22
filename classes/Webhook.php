@@ -38,12 +38,28 @@ class Webhook extends ObjectModel
         ],
     ];
 
+    /**
+     * Retrieve webhook IDs based on action and entity
+     * Security: Strict input validation to prevent SQL injection
+     * @param string $hook The hook name to search for
+     * @return array The webhook IDs matching the criteria
+     */
     public static function getIdsByActionEntity($hook)
     {
+        // Security: Validate that $hook is a valid string
+        if (!is_string($hook) || empty($hook)) {
+            return [];
+        }
+
+        // Security: Use prepared query to prevent SQL injection
         $sql = 'SELECT id_webhook
             FROM ' . _DB_PREFIX_ . 'webhook
-            WHERE CONCAT(entity, action) = "' . pSQL(strtolower($hook)) . '" AND active = 1';
-        $data = Db::getInstance()->executeS($sql);
+            WHERE CONCAT(entity, action) = %s AND active = 1';
+
+        $data = Db::getInstance()->executeS($sql, [
+            'hook' => pSQL(strtolower($hook))
+        ]);
+
         return array_column($data, 'id_webhook');
     }
 

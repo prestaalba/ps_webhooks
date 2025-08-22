@@ -53,7 +53,7 @@ class Ps_Webhooks extends Module
         }
         $tab->add();
 
-        $query = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'webhook ( 
+        $query = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'webhook (
             `id_webhook` int(10) unsigned NOT NULL Key AUTO_INCREMENT,
             `action` varchar(10) NOT NULL,
             `entity` varchar(100) NOT NULL,
@@ -90,7 +90,7 @@ class Ps_Webhooks extends Module
         }
     }
 
-    public function executeHook($hook_name, $params) 
+    public function executeHook($hook_name, $params)
     {
         $ids_webhooks = Webhook::getIdsByActionEntity($hook_name);
         if (!$ids_webhooks) {
@@ -102,9 +102,32 @@ class Ps_Webhooks extends Module
             self::executeUrl($webhook->url, $webhook->action, $webhook->entity, $params['object']);
         }
     }
- 
+
+    /**
+     * Send HTTP request to the specified URL to trigger the webhook
+     * Security: Strict parameter validation and disabling of insecure SSL options
+     * @param string $url The target URL for the webhook
+     * @param string $action The action performed (add, update, delete)
+     * @param string $entity The type of entity concerned
+     * @param object $object The object to send
+     * @param bool $test If true, performs a connection test
+     * @return mixed HTTP code if test=true, otherwise null
+     */
     public static function executeUrl($url, $action, $entity, $object, $test = false)
     {
+        // Security: Validate that the entity is a valid class inheriting from ObjectModel
+        if (!class_exists($entity) || !is_subclass_of($entity, 'ObjectModel')) {
+            // If the class is not valid, we don't continue to prevent dynamic code execution
+            return;
+        }
+
+        // Security: Filter sensitive data before sending
+        $object_vars = get_object_vars($object);
+        // Exclude sensitive fields that should not be sent
+        unset($object_vars['passwd']);
+        unset($object_vars['secure_key']);
+        unset($object_vars['password']);
+
         $curl = curl_init($url);
         $curl_options = [
             CURLOPT_RETURNTRANSFER => true,
@@ -117,10 +140,12 @@ class Ps_Webhooks extends Module
             CURLOPT_FORBID_REUSE => true,
             CURLOPT_CONNECTTIMEOUT => 3,
             CURLOPT_TIMEOUT => 3,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_SSL_VERIFYPEER => false,
+            // Security: Enable SSL verification to prevent MITM attacks
+            CURLOPT_SSL_VERIFYHOST => true,
+            CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode(['action' => $action, 'entity' => $entity, 'data' => get_object_vars($object)]),
+            // Security: Send filtered object data instead of raw object
+            CURLOPT_POSTFIELDS => json_encode(['action' => $action, 'entity' => $entity, 'data' => $object_vars]),
         ];
         curl_setopt_array($curl, $curl_options);
 
