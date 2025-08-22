@@ -18,14 +18,39 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+/**
+ * Webhook class
+ */
 class Webhook extends ObjectModel
 {
+    /**
+     * @var string Action type
+     */
     public $action;
+
+    /**
+     * @var string Entity name
+     */
     public $entity;
+
+    /**
+     * @var string Description of the webhook
+     */
     public $description;
+
+    /**
+     * @var string URL to send the webhook
+     */
     public $url;
+
+    /**
+     * @var bool Active status of the webhook
+     */
     public $active = true;
 
+    /**
+     * @var array Definition of the webhook object
+     */
     public static $definition = [
         'table' => 'webhook',
         'primary' => 'id_webhook',
@@ -38,6 +63,12 @@ class Webhook extends ObjectModel
         ],
     ];
 
+    /**
+     * Get webhook IDs by action and entity
+     *
+     * @param string $hook Hook name to search for
+     * @return array List of webhook IDs
+     */
     public static function getIdsByActionEntity($hook)
     {
         $sql = 'SELECT id_webhook
@@ -47,6 +78,11 @@ class Webhook extends ObjectModel
         return array_column($data, 'id_webhook');
     }
 
+    /**
+     * Get the hook name for this webhook
+     *
+     * @return string Hook name
+     */
     public function getHookName()
     {
         return 'actionObject' . ucfirst($this->entity) . ucfirst($this->action) . 'After';
