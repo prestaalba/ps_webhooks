@@ -22,6 +22,9 @@ require dirname(__FILE__) . '/vendor/autoload.php';
 
 class Ps_Webhooks extends Module
 {
+    /**
+     * Webhooks module constructor
+     */
     public function __construct()
     {
         $this->name = 'ps_webhooks';
@@ -41,6 +44,11 @@ class Ps_Webhooks extends Module
         }
     }
 
+    /**
+     * Install the module and create the data table
+     *
+     * @return bool True if installation succeeded, false otherwise
+     */
     public function install()
     {
         $tab = new Tab();
@@ -53,7 +61,7 @@ class Ps_Webhooks extends Module
         }
         $tab->add();
 
-        $query = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'webhook ( 
+        $query = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'webhook (
             `id_webhook` int(10) unsigned NOT NULL Key AUTO_INCREMENT,
             `action` varchar(10) NOT NULL,
             `entity` varchar(100) NOT NULL,
@@ -66,6 +74,11 @@ class Ps_Webhooks extends Module
         return parent::install();
     }
 
+    /**
+     * Uninstall the module and remove the data table
+     *
+     * @return bool True if uninstallation succeeded, false otherwise
+     */
     public function uninstall()
     {
         $id_tab = Tab::getIdFromClassName('AdminWebhooks');
@@ -78,11 +91,23 @@ class Ps_Webhooks extends Module
         return parent::uninstall();
     }
 
+    /**
+     * Redirect to the webhooks administration page
+     *
+     * @return string Redirection URL
+     */
     public function getContent()
     {
         Tools::redirectAdmin($this->context->link->getAdminLink('AdminWebhooks'));
     }
 
+    /**
+     * Handle dynamic method calls
+     *
+     * @param string $name Name of the called method
+     * @param array $params Parameters passed to the method
+     * @return mixed Result of the call
+     */
     public function __call($name, $params)
     {
         if (strpos($name, 'hookActionObject') !== false) {
@@ -90,7 +115,14 @@ class Ps_Webhooks extends Module
         }
     }
 
-    public function executeHook($hook_name, $params) 
+    /**
+     * Execute a hook and send data to the webhook
+     *
+     * @param string $hook_name Name of the hook to execute
+     * @param array $params Hook parameters
+     * @return void
+     */
+    public function executeHook($hook_name, $params)
     {
         $ids_webhooks = Webhook::getIdsByActionEntity($hook_name);
         if (!$ids_webhooks) {
@@ -102,7 +134,17 @@ class Ps_Webhooks extends Module
             self::executeUrl($webhook->url, $webhook->action, $webhook->entity, $params['object']);
         }
     }
- 
+
+    /**
+     * Execute an HTTP request to the webhook URL
+     *
+     * @param string $url Webhook URL
+     * @param string $action Action to send
+     * @param string $entity Entity concerned
+     * @param object $object Object to send
+     * @param bool $test Test mode
+     * @return int|bool HTTP code or false on error
+     */
     public static function executeUrl($url, $action, $entity, $object, $test = false)
     {
         $curl = curl_init($url);

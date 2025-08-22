@@ -18,8 +18,14 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+/**
+ * Admin controller for webhooks management
+ */
 class AdminWebhooksController extends ModuleAdminController
 {
+    /**
+     * Constructor for the AdminWebhooksController
+     */
     public function __construct()
     {
         $this->table = 'webhook';
@@ -162,6 +168,9 @@ class AdminWebhooksController extends ModuleAdminController
         $this->addRowAction('delete');
     }
 
+    /**
+     * Initialize the page header toolbar
+     */
     public function initPageHeaderToolbar()
     {
         parent::initPageHeaderToolbar();
@@ -175,6 +184,14 @@ class AdminWebhooksController extends ModuleAdminController
         }
     }
 
+    /**
+     * Display test link for a webhook
+     *
+     * @param string $token Security token
+     * @param int $id Webhook ID
+     * @param string|null $name Webhook name
+     * @return string HTML content for the test link
+     */
     public function displayTestLink($token, $id, $name = null)
     {
         $tpl = $this->createTemplate('helpers/list/list_action_default.tpl');
@@ -191,6 +208,11 @@ class AdminWebhooksController extends ModuleAdminController
         return $tpl->fetch();
     }
 
+    /**
+     * Process webhook test
+     *
+     * @return bool True if test succeeded, false otherwise
+     */
     public function processTest()
     {
         if ($id = (int) Tools::getValue('id_webhook')) {
@@ -214,18 +236,36 @@ class AdminWebhooksController extends ModuleAdminController
         return false;
     }
 
+    /**
+     * Before delete hook
+     *
+     * @param object $object Webhook object
+     * @return bool True
+     */
     protected function beforeDelete($object)
     {
         $this->module->unregisterHook($object->getHookName());
         return true;
     }
 
+    /**
+     * After add hook
+     *
+     * @param object $object Webhook object
+     * @return bool True
+     */
     protected function afterAdd($object)
     {
         $this->module->registerHook($object->getHookName());
         return true;
     }
 
+    /**
+     * After update hook
+     *
+     * @param object $object Webhook object
+     * @return bool True
+     */
     protected function afterUpdate($object)
     {
         $this->module->registerHook($object->getHookName());
