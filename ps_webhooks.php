@@ -129,6 +129,16 @@ class Ps_Webhooks extends Module
         unset($object_vars['password']);
 
         $curl = curl_init($url);
+        
+        // Check if server is using HTTPS to adjust SSL parameters
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+                   (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+                   (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on');
+        
+        // Set SSL verification based on server configuration
+        $sslVerifyHost = $isHttps ? true : false;
+        $sslVerifyPeer = $isHttps ? true : false;
+        
         $curl_options = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_NOBODY => true,
@@ -140,9 +150,9 @@ class Ps_Webhooks extends Module
             CURLOPT_FORBID_REUSE => true,
             CURLOPT_CONNECTTIMEOUT => 3,
             CURLOPT_TIMEOUT => 3,
-            // Security: Enable SSL verification to prevent MITM attacks
-            CURLOPT_SSL_VERIFYHOST => true,
-            CURLOPT_SSL_VERIFYPEER => true,
+            // Security: Enable SSL verification to prevent MITM attacks when using HTTPS
+            CURLOPT_SSL_VERIFYHOST => $sslVerifyHost,
+            CURLOPT_SSL_VERIFYPEER => $sslVerifyPeer,
             CURLOPT_POST => true,
             // Security: Send filtered object data instead of raw object
             CURLOPT_POSTFIELDS => json_encode(['action' => $action, 'entity' => $entity, 'data' => $object_vars]),
