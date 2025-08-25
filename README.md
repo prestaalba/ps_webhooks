@@ -40,6 +40,12 @@ Go to the module configuration page in your PrestaShop back office. Create as ma
 }
 ```
 
+If you need to programmatically add or update custom data to the PrestaShop entity before the webhook is sent, you can use the `actionObjectWebhookSendBefore` hook. The hook is called in the origin file as follows:
+
+```php
+Hook::exec('actionObjectWebhookSendBefore', ['object' => $object]);
+```
+
 ## Contribute
 
 Any contributions are very welcome :)

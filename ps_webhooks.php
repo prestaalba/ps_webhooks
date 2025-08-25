@@ -29,7 +29,7 @@ class Ps_Webhooks extends Module
     {
         $this->name = 'ps_webhooks';
         $this->author = 'Experto PrestaShop';
-        $this->version = '1.0.0';
+        $this->version = '1.1.0';
         $this->tab = 'others';
         $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
         $this->bootstrap = true;
@@ -129,9 +129,12 @@ class Ps_Webhooks extends Module
             return;
         }
 
+        $object = $params['object'];
+        Hook::exec('actionObjectWebhookSendBefore', ['object' => $object]);
+
         foreach ($ids_webhooks as $id_webhook) {
             $webhook = new Webhook($id_webhook);
-            self::executeUrl($webhook->url, $webhook->action, $webhook->entity, $params['object']);
+            self::executeUrl($webhook->url, $webhook->action, $webhook->entity, $object);
         }
     }
 
