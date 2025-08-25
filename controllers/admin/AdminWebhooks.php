@@ -219,13 +219,17 @@ class AdminWebhooksController extends ModuleAdminController
             $webhook = new Webhook($id);
 
             $code = Ps_Webhooks::executeUrl($webhook->url, $webhook->action, $webhook->entity, new $webhook->entity, true);
+            $message = 'HTTP ' . $code;
+            if (version_compare(_PS_VERSION_, '9.0', '<')) {
+                $message = '<b>' . $message . '</b>';
+            }
 
-            if ($code < 300) {
-                $this->confirmations[] = $this->module->l('Webhook connection tested', 'AdminWebhooks') . ': <b>HTTP ' . $code . '</b>';
+            if ($code >= 200 && $code < 300) {
+                $this->confirmations[] = $this->module->l('Webhook connection tested', 'AdminWebhooks') . ': ' . $message;
 
                 return true;
             } else {
-                $this->errors[] = $this->module->l('Is not possible to connect to this URL', 'AdminWebhooks') . ': <b>HTTP ' . $code . '</b>';
+                $this->errors[] = $this->module->l('Is not possible to connect to this URL', 'AdminWebhooks') . ': ' . $message;
 
                 return false;
             }
