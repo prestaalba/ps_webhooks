@@ -136,17 +136,28 @@ class Ps_Webhooks extends Module
     }
 
     /**
-     * Execute an HTTP request to the webhook URL
-     *
-     * @param string $url Webhook URL
-     * @param string $action Action to send
-     * @param string $entity Entity concerned
-     * @param object $object Object to send
-     * @param bool $test Test mode
-     * @return int|bool HTTP code or false on error
+     * Send HTTP request to the specified URL to trigger the webhook
+     * 
+     * @param string $url The target URL for the webhook
+     * @param string $action The action performed (add, update, delete)
+     * @param string $entity The type of entity concerned
+     * @param object $object The object to send
+     * @param bool $test If true, performs a connection test
+    * @return int|bool HTTP code or false on error
      */
     public static function executeUrl($url, $action, $entity, $object, $test = false)
     {
+        // Security: Validate that the entity is a valid class inheriting from ObjectModel
+        if (!class_exists($entity) || !is_subclass_of($entity, 'ObjectModel')) {
+            return false;
+        }
+
+        // Security: Filter sensitive data before sending
+        $object_vars = get_object_vars($object);
+        unset($object_vars['passwd']);
+        unset($object_vars['secure_key']);
+        unset($object_vars['password']);
+
         $curl = curl_init($url);
         $curl_options = [
             CURLOPT_RETURNTRANSFER => true,
@@ -159,10 +170,11 @@ class Ps_Webhooks extends Module
             CURLOPT_FORBID_REUSE => true,
             CURLOPT_CONNECTTIMEOUT => 3,
             CURLOPT_TIMEOUT => 3,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_SSL_VERIFYPEER => false,
+            // Security: Enable SSL verification to prevent MITM attacks when using HTTPS
+            CURLOPT_SSL_VERIFYHOST => Tools::usingSecureMode(),
+            CURLOPT_SSL_VERIFYPEER => Tools::usingSecureMode(),
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode(['action' => $action, 'entity' => $entity, 'data' => get_object_vars($object)]),
+            CURLOPT_POSTFIELDS => json_encode(['action' => $action, 'entity' => $entity, 'data' => $object_vars]),
         ];
         curl_setopt_array($curl, $curl_options);
 
@@ -176,10 +188,10 @@ class Ps_Webhooks extends Module
 
         curl_exec($curl);
 
-        if ($test) {
-            return curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        }
+        $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
+
+        return $code;
     }
 }

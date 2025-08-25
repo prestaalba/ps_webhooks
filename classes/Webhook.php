@@ -64,17 +64,21 @@ class Webhook extends ObjectModel
     ];
 
     /**
-     * Get webhook IDs by action and entity
-     *
-     * @param string $hook Hook name to search for
-     * @return array List of webhook IDs
+     * Retrieve webhook IDs based on action and entity
+     * 
+     * @param string $hook The hook name to search for
+     * @return array The webhook IDs matching the criteria
      */
     public static function getIdsByActionEntity($hook)
     {
-        $sql = 'SELECT id_webhook
-            FROM ' . _DB_PREFIX_ . 'webhook
-            WHERE CONCAT(entity, action) = "' . pSQL(strtolower($hook)) . '" AND active = 1';
-        $data = Db::getInstance()->executeS($sql);
+        $query = new DbQuery();
+        $query->select('id_webhook');
+        $query->from('webhook');
+        $query->where('CONCAT(entity, action) = "' . pSQL(strtolower($hook)) . '"');
+        $query->where('active = 1');
+
+        $data = Db::getInstance()->executeS($query);
+
         return array_column($data, 'id_webhook');
     }
 
