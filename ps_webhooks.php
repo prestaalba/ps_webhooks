@@ -29,7 +29,7 @@ class Ps_Webhooks extends Module
     {
         $this->name = 'ps_webhooks';
         $this->author = 'Experto PrestaShop';
-        $this->version = '1.1.0';
+        $this->version = '1.2.0';
         $this->tab = 'others';
         $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
         $this->bootstrap = true;

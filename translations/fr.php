@@ -28,3 +28,12 @@ $_MODULE['<{ps_webhooks}prestashop>adminwebhooks_0cbc6611f5540bd0809a388dc95a615
 $_MODULE['<{ps_webhooks}prestashop>adminwebhooks_240d37a3965d6e80728a0d74c844b520'] = 'Connexion au webhook vérifiée';
 $_MODULE['<{ps_webhooks}prestashop>adminwebhooks_803bede8777a81866b2f3dcec04d7c2c'] = 'Impossible de se connecter à cette URL';
 $_MODULE['<{ps_webhooks}prestashop>adminwebhooks_ef1b393222d4201ac556ec467dc0b0e0'] = 'Impossible de vérifier la connexion à cette URL';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_4f65ff5fc1d27f3590e0877db9a80ee0'] = 'Importer les webhooks';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_a6c9e3a7671c1fd9d7328c3be5d107b5'] = 'Fichier JSON';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_25f371c52d582c144fe0e3ff46231c5b'] = 'Téléverser et importer';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_b7b35e678fac8e3ac6493d09e6bf8ec4'] = 'Exporter JSON';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_0450d266974d92724ff4bacc3a51952e'] = 'Tout supprimer';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_4698765223e0163797d47ea48af49169'] = 'Tous les webhooks ont été supprimés.';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_55111cc0c690619ba23956f22719e877'] = 'Aucun fichier n\'a été importé ou le fichier est invalide.';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_ab501e3c5f9468b8723dfc7cc846d6d0'] = 'Format JSON invalide.';
+$_MODULE['<{ps_webhooks}prestashop>adminwebhooks_5c541ee9d6577506e3b2619c8daf05a3'] = 'Webhooks importés avec succès.';

@@ -91,4 +91,14 @@ class Webhook extends ObjectModel
     {
         return 'actionObject' . ucfirst($this->entity) . ucfirst($this->action) . 'After';
     }
+
+    /**
+     * Delete all webhooks
+     *
+     * @return bool True if installation succeeded, false otherwise
+     */
+    public static function deleteAll()
+    {
+        return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'webhook');
+    }
 }

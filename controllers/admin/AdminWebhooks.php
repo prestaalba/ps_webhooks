@@ -162,6 +162,24 @@ class AdminWebhooksController extends ModuleAdminController
             ],
         ];
 
+        $this->fields_options = [
+            'import' => [
+                'title' => $this->module->l('Import Webhooks', 'AdminWebhooks'),
+                'icon' => 'icon-cogs',
+                'fields' => [
+                    'webhooks_import_json' => [
+                        'title' => $this->module->l('JSON file', 'AdminWebhooks'),
+                        'type' => 'file',
+                        'name' => 'import_json',
+                        'required' => true,
+                    ],
+                ],
+                'submit' => [
+                    'title' => $this->module->l('Upload and Import', 'AdminWebhooks'),
+                ],
+            ],
+        ];
+
         $this->actions_available[] = 'test';
         $this->addRowAction('test');
         $this->addRowAction('edit');
@@ -180,6 +198,18 @@ class AdminWebhooksController extends ModuleAdminController
                 'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
                 'desc' => $this->module->l('Add new', 'AdminWebhooks'),
                 'icon' => 'process-icon-new',
+            ];
+
+            $this->page_header_toolbar_btn['export_json'] = [
+                'href' => self::$currentIndex . '&action=exportJson&token=' . $this->token,
+                'desc' => $this->module->l('Export JSON', 'AdminWebhooks'),
+                'icon' => 'process-icon-download',
+            ];
+
+            $this->page_header_toolbar_btn['delete_all'] = [
+                'href' => self::$currentIndex . '&action=deleteAll&token=' . $this->token,
+                'desc' => $this->module->l('Delete all', 'AdminWebhooks'),
+                'icon' => 'process-icon-delete',
             ];
         }
     }
@@ -238,6 +268,73 @@ class AdminWebhooksController extends ModuleAdminController
         $this->errors[] = $this->module->l('Is not possible to test the connection to this URL', 'AdminWebhooks');
 
         return false;
+    }
+
+    /**
+     * Update options and preferences.
+     *
+     * @return bool True if test succeeded, false otherwise
+     */
+    public function processUpdateOptions()
+    {
+        return $this->processImportJson();
+    }
+
+    /**
+     * Delete all webhooks
+     */
+    public function processDeleteAll()
+    {
+        Webhook::deleteAll();
+
+        $this->confirmations[] = $this->module->l('All webhooks deleted.', 'AdminWebhooks');
+    }
+
+    /**
+     * Export webhooks config and download json file
+     */
+    public function processExportJson()
+    {
+        $webhooks = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'webhook');
+
+        header('Content-Type: application/json');
+        header('Content-Disposition: attachment; filename="webhooks.json"');
+        echo json_encode($webhooks, JSON_PRETTY_PRINT);
+
+        exit;
+    }
+
+    /**
+     * Import webhooks config JSON file
+     *
+     * @return bool True if test succeeded, false otherwise
+     */
+    public function processImportJson()
+    {
+        if (!isset($_FILES['import_json']) || $_FILES['import_json']['error'] !== UPLOAD_ERR_OK) {
+            $this->errors[] = $this->module->l('No file uploaded or invalid file.', 'AdminWebhooks');
+
+            return false;
+        }
+
+        $data = file_get_contents($_FILES['import_json']['tmp_name']);
+        $webhooks = json_decode($data, true);
+
+        if (!is_array($webhooks)) {
+            $this->errors[] = $this->module->l('Invalid JSON format.', 'AdminWebhooks');
+
+            return false;
+        }
+
+        foreach ($webhooks as $w) {
+            $webhook = new Webhook();
+            $webhook->hydrate($w);
+            $webhook->add();
+        }
+
+        $this->confirmations[] = $this->module->l('Webhooks imported successfully.', 'AdminWebhooks');
+
+        return true;
     }
 
     /**
