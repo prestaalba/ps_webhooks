@@ -8,6 +8,7 @@ class ComposerStaticInit1153e73085d490d1f99e9a1fcba3f80f
 {
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'ExpertoPrestaShop\\Mcp\\WebhookMcpTools' => __DIR__ . '/../..' . '/src/WebhookMcpTools.php',
         'Webhook' => __DIR__ . '/../..' . '/classes/Webhook.php',
     );
 

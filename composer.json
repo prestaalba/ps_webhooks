@@ -9,7 +9,8 @@
   ],
   "autoload": {
     "classmap": [
-      "classes"
+      "classes",
+      "src"
     ]
   },
   "config": {

@@ -197,4 +197,9 @@ class Ps_Webhooks extends Module
 
         return $code;
     }
+
+    public function isMcpCompliant(): bool
+    {
+        return true;
+    }
 }
